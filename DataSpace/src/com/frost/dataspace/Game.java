@@ -23,7 +23,7 @@ public class Game extends Canvas implements Runnable {
 		Dimension size = new Dimension(width, height);
 		this.setPreferredSize(size);
 		frame = new JFrame();
-
+//TEST
 	}
 
 	public synchronized void start() {

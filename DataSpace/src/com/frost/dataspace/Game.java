@@ -5,8 +5,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
+
+import com.frost.dataspace.graphics.Screen;
 
 
 public class Game extends Canvas implements Runnable {
@@ -19,13 +23,19 @@ public class Game extends Canvas implements Runnable {
 	boolean running = false;
 	private JFrame frame;
 	private Thread thread;
-	public Game() {//okkkjgfgftyfhfghfg
+	Screen screen;
+	private BufferedImage image=new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
+	private int [] pixels=((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+	public Game() {
 		Dimension size = new Dimension(width, height);
 		this.setPreferredSize(size);
+		screen=new Screen(width,height);
 		frame = new JFrame();
-//TEST
-	}
+		
+		
 
+	}
+  
 	public synchronized void start() {
 		running = true;
 		thread = new Thread(this, "Game");
@@ -84,11 +94,16 @@ public class Game extends Canvas implements Runnable {
 			createBufferStrategy(3);
 			return;
 		}
-		
+		screen.clear();
+		screen.render();
+		for (int i=0;i<pixels.length;i++){
+			pixels[i]=screen.pixels[i];
+		}
 		
 		Graphics g=bs.getDrawGraphics();
 		g.setColor(Color.black);
-		g.fillRect(0, 0, width, height);
+		g.fillRect(0, 0, getWidth(), getHeight());
+		g.drawImage(image, 0, 0, getWidth(), getHeight(),null);
 		g.dispose();
 		bs.show();
 		
